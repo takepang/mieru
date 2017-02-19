@@ -291,30 +291,7 @@ class FormHelper extends Helper
     }
 
     /**
-     * Returns if a field is required to be filled based on validation properties from the validating object.
-     *
-     * @param \Cake\Validation\ValidationSet $validationRules Validation rules set.
-     * @return bool true if field is required to be filled, false otherwise
-     */
-    protected function _isRequiredField($validationRules)
-    {
-        if (empty($validationRules) || count($validationRules) === 0) {
-            return false;
-        }
-        $validationRules->isUpdate($this->requestType === 'put');
-        foreach ($validationRules as $rule) {
-            if ($rule->skip()) {
-                continue;
-            }
-
-            return !$validationRules->isEmptyAllowed();
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns an HTML FORM element.
+     * Returns an HTML form element.
      *
      * ### Options:
      *
@@ -1066,6 +1043,7 @@ class FormHelper extends Helper
             $nestedInput = true;
         }
         $nestedInput = isset($options['nestedInput']) ? $options['nestedInput'] : $nestedInput;
+        unset($options['nestedInput']);
 
         if ($nestedInput === true && $options['type'] === 'checkbox' && !array_key_exists('hiddenField', $options) && $label !== false) {
             $options['hiddenField'] = '_split';
@@ -1081,7 +1059,11 @@ class FormHelper extends Helper
         }
 
         $label = $this->_getLabel($fieldName, compact('input', 'label', 'error', 'nestedInput') + $options);
-        $result = $this->_groupTemplate(compact('input', 'label', 'error', 'options'));
+        if ($nestedInput) {
+            $result = $this->_groupTemplate(compact('label', 'error', 'options'));
+        } else {
+            $result = $this->_groupTemplate(compact('input', 'label', 'error', 'options'));
+        }
         $result = $this->_inputContainerTemplate([
             'content' => $result,
             'error' => $error,
@@ -1110,7 +1092,7 @@ class FormHelper extends Helper
         }
 
         return $this->formatTemplate($groupTemplate, [
-            'input' => $options['input'],
+            'input' => isset($options['input']) ? $options['input'] : [],
             'label' => $options['label'],
             'error' => $options['error'],
             'templateVars' => isset($options['options']['templateVars']) ? $options['options']['templateVars'] : []

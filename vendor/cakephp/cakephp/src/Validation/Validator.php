@@ -1149,6 +1149,26 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
      * Add a string length validation rule to a field.
      *
      * @param string $field The field you want to apply the rule to.
+     * @param int $min The minimum length required.
+     * @param string|null $message The error message when the rule fails.
+     * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
+     *   true when the validation rule should be applied.
+     * @see \Cake\Validation\Validation::minLengthBytes()
+     * @return $this
+     */
+    public function minLengthBytes($field, $min, $message = null, $when = null)
+    {
+        $extra = array_filter(['on' => $when, 'message' => $message]);
+
+        return $this->add($field, 'minLengthBytes', $extra + [
+            'rule' => ['minLengthBytes', $min]
+        ]);
+    }
+
+    /**
+     * Add a string length validation rule to a field.
+     *
+     * @param string $field The field you want to apply the rule to.
      * @param int $max The maximum length allowed.
      * @param string|null $message The error message when the rule fails.
      * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
@@ -1162,6 +1182,26 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
 
         return $this->add($field, 'maxLength', $extra + [
             'rule' => ['maxLength', $max]
+        ]);
+    }
+
+    /**
+     * Add a string length validation rule to a field.
+     *
+     * @param string $field The field you want to apply the rule to.
+     * @param int $max The maximum length allowed.
+     * @param string|null $message The error message when the rule fails.
+     * @param string|callable|null $when Either 'create' or 'update' or a callable that returns
+     *   true when the validation rule should be applied.
+     * @see \Cake\Validation\Validation::maxLengthBytes()
+     * @return $this
+     */
+    public function maxLengthBytes($field, $max, $message = null, $when = null)
+    {
+        $extra = array_filter(['on' => $when, 'message' => $message]);
+
+        return $this->add($field, 'maxLengthBytes', $extra + [
+            'rule' => ['maxLengthBytes', $max]
         ]);
     }
 
@@ -1518,7 +1558,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
     public function multipleOptions($field, array $options = [], $message = null, $when = null)
     {
         $extra = array_filter(['on' => $when, 'message' => $message]);
-        $caseInsensitive = isset($options['caseInsenstive']) ? $options['caseInsensitive'] : false;
+        $caseInsensitive = isset($options['caseInsensitive']) ? $options['caseInsensitive'] : false;
         unset($options['caseInsensitive']);
 
         return $this->add($field, 'multipleOptions', $extra + [
@@ -1675,7 +1715,7 @@ class Validator implements ArrayAccess, IteratorAggregate, Countable
      */
     protected function _fieldIsEmpty($data)
     {
-        if (empty($data) && $data !== '0' && $data !== false && $data !== 0 && $data !== 0.0) {
+        if (empty($data) && !is_bool($data) && !is_numeric($data)) {
             return true;
         }
         $isArray = is_array($data);

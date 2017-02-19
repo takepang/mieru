@@ -17,8 +17,6 @@ use Cake\Core\Configure;
 use Cake\Database\Exception as DatabaseException;
 use Cake\Network\Session;
 use Cake\Routing\Router;
-use Cake\TestSuite\LegacyRequestDispatcher;
-use Cake\TestSuite\MiddlewareDispatcher;
 use Cake\Utility\CookieCryptTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
@@ -148,7 +146,7 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @var null|string
      */
-    protected $_cookieEncriptionKey = null;
+    protected $_cookieEncryptionKey = null;
 
     /**
      * Auto-detect if the HTTP middleware stack should be used.
@@ -298,8 +296,8 @@ abstract class IntegrationTestCase extends TestCase
      */
     protected function _getCookieEncryptionKey()
     {
-        if (isset($this->_cookieEncriptionKey)) {
-            return $this->_cookieEncriptionKey;
+        if (isset($this->_cookieEncryptionKey)) {
+            return $this->_cookieEncryptionKey;
         }
 
         return Security::salt();
@@ -321,7 +319,7 @@ abstract class IntegrationTestCase extends TestCase
      */
     public function cookieEncrypted($name, $value, $encrypt = 'aes', $key = null)
     {
-        $this->_cookieEncriptionKey = $key;
+        $this->_cookieEncryptionKey = $key;
         $this->_cookie[$name] = $this->_encrypt($value, $encrypt);
     }
 
@@ -702,7 +700,7 @@ abstract class IntegrationTestCase extends TestCase
         }
         $result = $this->_response->header();
         if ($url === null) {
-            $this->assertTrue(!empty($result['Location']), $message);
+            $this->assertNotEmpty($result['Location'], $message);
 
             return;
         }
@@ -1024,7 +1022,7 @@ abstract class IntegrationTestCase extends TestCase
             $this->fail('No response set, cannot assert cookies.');
         }
         $result = $this->_response->cookie($name);
-        $this->_cookieEncriptionKey = $key;
+        $this->_cookieEncryptionKey = $key;
         $result['value'] = $this->_decrypt($result['value'], $encrypt);
         $this->assertEquals($expected, $result['value'], 'Cookie data differs. ' . $message);
     }

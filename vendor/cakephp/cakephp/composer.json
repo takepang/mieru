@@ -30,7 +30,7 @@
         "ext-openssl": "To use Security::encrypt() or have secure CSRF token generation."
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "<6.0",
         "cakephp/cakephp-codesniffer": "~2.1"
     },
     "autoload": {
@@ -64,6 +64,7 @@
         "cakephp/database": "self.version",
         "cakephp/event": "self.version",
         "cakephp/filesystem": "self.version",
+        "cakephp/form": "self.version",
         "cakephp/i18n": "self.version",
         "cakephp/log": "self.version",
         "cakephp/orm": "self.version",
@@ -75,8 +76,9 @@
             "@cs-check",
             "@test"
         ],
-        "cs-check": "vendor/bin/phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
-        "cs-fix": "vendor/bin/phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
-        "test": "vendor/bin/phpunit --colors=always"
+        "cs-check": "phpcs --colors -p ./src ./tests",
+        "cs-fix": "phpcbf --colors ./src ./tests",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover=clover.xml"
     }
 }

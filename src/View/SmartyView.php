@@ -48,6 +48,7 @@ class SmartyView extends View {
 		EventManager $eventManager = null, array $viewOptions = []) {
 		
 		$this->_smarty = new Smarty();
+
 		if (!file_exists(TMP.'smarty')) {
 			mkdir(TMP.'smarty');
 		}

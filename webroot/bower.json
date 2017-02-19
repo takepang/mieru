@@ -1,0 +1,19 @@
+{
+  "name": "webroot",
+  "homepage": "https://github.com/takepang/mieru",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-theme-white-plum": "^0.3.0"
+  }
+}
